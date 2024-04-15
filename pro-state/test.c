@@ -8,7 +8,7 @@ int main()
 //	printf("%d\n",a);
 //	return 0;
         while(1)
-	{
+	{	
 		printf("I am process, pid:%d\n",getpid());
 		sleep(1);
 	}

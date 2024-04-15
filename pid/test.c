@@ -6,11 +6,10 @@
 const int num = 5;
 void Work()
 {
-    int x = 20;
+    int x = 5;
     while(x--)
     {
-        printf("hello world --- %d\n",x);
-	sleep(1);
+        printf("hello world\n");
     }
 }
 int main()
@@ -27,10 +26,11 @@ int main()
             //子进程的运行
             printf("I am child，pid:%d,ppid:%d\n",getpid(),getppid());
             sleep(1);
-            Work();
+            Worker();
             exit(0);
         }
-        sleep(5);
+        sleep(1);
+        
         printf("I am father, pid:%d\n",getpid());
     }
     // pid_t id = fork();

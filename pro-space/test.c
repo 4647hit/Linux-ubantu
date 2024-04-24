@@ -1,37 +1,37 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<unistd.h>
-#include<sys/types.h>
-int num;
-int nums = 100;
+// #include<stdio.h>
+// #include<stdlib.h>
+// #include<unistd.h>
+// #include<sys/types.h>
+// int num;
+// int nums = 100;
 
-int main(int argc, char* argv[],char* env[])
-{
-    int ret = 0;
-    pid_t id = fork();
-    if(id == 0)
-    {
-        while(1)
-        {
-            printf("child, pid:%d, ppid: %d,num: %d,&num: %p\n",getpid(),getppid(),num,&num);
-            ret++;
-            if(ret == 7)
-            {
-                num = 100;
-                printf("child change nums\n");
-            }
-            sleep(2);
-        }
-    }
-    else
-    {
+// int main(int argc, char* argv[],char* env[])
+// {
+//     int ret = 0;
+//     pid_t id = fork();
+//     if(id == 0)
+//     {
+//         while(1)
+//         {
+//             printf("child, pid:%d, ppid: %d,num: %d,&num: %p\n",getpid(),getppid(),num,&num);
+//             ret++;
+//             if(ret == 7)
+//             {
+//                 num = 100;
+//                 printf("child change nums\n");
+//             }
+//             sleep(2);
+//         }
+//     }
+//     else
+//     {
 
-        while(1)
-        {
-            printf("father, pid:%d, ppid: %d,num: %d,&num: %p\n",getpid(),getppid(),num,&num);
-            sleep(2);
-        }
-    }
+//         while(1)
+//         {
+//             printf("father, pid:%d, ppid: %d,num: %d,&num: %p\n",getpid(),getppid(),num,&num);
+//             sleep(2);
+//         }
+//     }
 
 
 //    for(int i = 0; argv[i]; i++)

@@ -10,10 +10,12 @@
 #define SYM  " "
 char* argv[argc];
 char pwd[SIZE];
-
+char env[SIZE];
+int lastcode;
 
 const char* HostName()
 {
+    putenv("HOSTNAME=iZuf6at4ih6u7gbg2vxumnZ");
     char* hostname = getenv("HOSTNAME");
     if(hostname)
     {
@@ -72,6 +74,11 @@ void Split(char* command)
     int i = 0;
     argv[i++] = strtok(command,SYM);//argv为全局变量，用于存放字符变量
     while(argv[i++] = strtok(NULL, SYM));//SYM为空格，这里是个宏
+    if(strcmp(argv[0],"ls") == 0)
+    {
+        argv[i - 1] = "--color";
+        argv[i] = NULL;
+    }
 }
 
 void Execute()
@@ -81,7 +88,12 @@ void Execute()
     {
         execvp(argv[0],argv);
     }
-    pid_t rid = waitpid(id,NULL,0);
+    int status = 0;
+    pid_t rid = waitpid(id,&status,0);
+    if(WIFEXITED(status))
+    {
+        lastcode = WEXITSTATUS(status);
+    }
     // if(rid > 0)
     // {
     //     printf("wait success, pid: %d\n",rid);
@@ -96,9 +108,55 @@ int Built_in_com()//用返回值判断是否为内建命令，如果是返回 1�
        char* home = argv[1];
        if(!home) home = Home(); 
        chdir(home);
-       snprintf(pwd,SIZE,"PWD=%s",home);
+       char word[512];
+       getcwd(word,512);
+       snprintf(pwd,SIZE,"PWD=%s",word);//注意这里数字的大小不能越界
        putenv(pwd);
     }
+    else if(strcmp(argv[0],"export") == 0)
+    {
+        ret = 1;
+        if(argv[1]) 
+        {
+            strcpy(env,argv[1]);
+            putenv(env);
+        }
+    }
+    else if(strcmp(argv[0],"echo") == 0)
+    {
+        ret = 1;  
+        if(argv[1] == NULL)
+        {
+            printf("\n");
+        }
+        else
+        {
+            if(argv[1][0] == '$')
+            {
+                if(argv[1][1] == '?')
+                {
+                    printf("%d\n",lastcode);
+                    lastcode = 0;
+                }
+                else // echo $环境变量名
+                {
+                    char* n = getenv(argv[1]+1);
+                    if(n)
+                    {
+                        printf("%s\n",n);
+                    }
+                    else
+                    {
+                        printf("The environment variable does not exist\n");
+                    }
+                }
+            }
+            else//echo XXXX 这里暂不考虑其他情况，例如echo和重定向符号结合
+            {
+                printf("%s\n",argv[1]);
+            }
+        }
+        }
     return ret;
 }
 int main()

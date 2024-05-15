@@ -4,6 +4,7 @@
 #include<sys/types.h>
 #include<sys/wait.h>
 #include<string.h>
+#include <signal.h>
 
 #define SIZE 1024
 #define argc 128
@@ -159,10 +160,15 @@ int Built_in_com()//用返回值判断是否为内建命令，如果是返回 1�
         }
     return ret;
 }
+void handle_sigint(int sig) 
+{
+    printf("\n");
+}
 int main()
 {
     while(1)//让shell持续运行
     {
+        signal(SIGINT, handle_sigint);
         char command[SIZE];
         //1.获取用户指令并打出命令行提示符
         int ret = interactive(command);

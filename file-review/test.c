@@ -8,17 +8,17 @@
 #define filename "file.txt"
 int main()
 {
-    //使用系统调用
-    const char* str = "hello world\n";
-    write(1,str,strlen(str));
-    //使用C语言的相关接口
-    const char* str1 = "hello fwrite\n";
-    fwrite(str1,strlen(str1),1,stdout);
+    // //使用系统调用
+    // const char* str = "hello world\n";
+    // write(1,str,strlen(str));
+    // //使用C语言的相关接口
+    // const char* str1 = "hello fwrite\n";
+    // fwrite(str1,strlen(str1),1,stdout);
 
-    const char* str2 = "hello fprintf\n";
-    fprintf(stdout,"%s",str2);
-    fork();
-    return 0;
+    // const char* str2 = "hello fprintf\n";
+    // fprintf(stdout,"%s",str2);
+    // fork();
+    // return 0;
 
     // close(0);
     // int fd = open("long.txtS",O_RDONLY);

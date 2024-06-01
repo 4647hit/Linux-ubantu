@@ -1,6 +1,11 @@
 #pragma once
 #include<stdio.h>
 #define SIZE 1024
+#define NONE_FLUSH (1<<1)
+#define LINE_FLUSH (1<<2)
+#define FULL_FLUSH (1<<3)
+
+
 typedef struct my_FILE
 {
     int fileno;
@@ -8,6 +13,7 @@ typedef struct my_FILE
     //char outbuffer[SIZE];
     int pos;//位置
     int cap;//容量
+    int flush_mode;//刷新模式
 }myFILE;
 
 

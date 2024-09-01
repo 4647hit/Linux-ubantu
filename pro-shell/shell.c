@@ -160,15 +160,15 @@ int Built_in_com()//用返回值判断是否为内建命令，如果是返回 1�
         }
     return ret;
 }
-void handle_sigint(int sig) 
-{
-    printf("\n");
-}
+
 int main()
 {
     while(1)//让shell持续运行
     {
-        signal(SIGINT, handle_sigint);
+        // sigset_t set;
+        // sigemptyset(&set);
+        // sigaddset(&set, 2);
+        // sigprocmask(SIG_BLOCK, &set, nullptr);
         char command[SIZE];
         //1.获取用户指令并打出命令行提示符
         int ret = interactive(command);

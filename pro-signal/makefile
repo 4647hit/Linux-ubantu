@@ -1,8 +1,10 @@
-all: mykill test
+.PHONY:all
+all: mykill  sigtest
 
-
-test:test.cpp
+sigtest:sigtest.cc
 	g++ -o $@ $^ -std=c++11
+# test:test.cpp
+# 	g++ -o $@ $^ -std=c++11
 mykill:mykill.cpp
 	g++ -o $@ $^ -std=c++11
 .PHONY:clean

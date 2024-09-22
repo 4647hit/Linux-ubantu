@@ -127,6 +127,10 @@ namespace ThreadModule
         {
             _stop = true;
         }
+        T& Data()
+        {
+            return _data;
+        }
         ~Thread() {}
 
     private:

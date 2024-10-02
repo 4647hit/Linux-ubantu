@@ -16,7 +16,7 @@ private:
         sem_post(&sem);
     }
     void Lock(pthread_mutex_t &lock)
-    {
+    { 
         pthread_mutex_lock(&lock);
     }
     void Unlock(pthread_mutex_t &lock)

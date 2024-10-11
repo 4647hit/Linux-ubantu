@@ -15,7 +15,6 @@ template <class T>
 class Threadpool
 {
 private:
-
     void Lock()
     {
         pthread_mutex_lock(&glock);
@@ -45,6 +44,7 @@ public:
     }
     void Handler_Task(std::string threadname)
     {
+        LOG(FATAL, "There isnt error")
         while (true)
         {
             Lock();
@@ -53,10 +53,9 @@ public:
             {
                 _wait_num++;
                 Thread_Sleep();
-                LOG(INFO, "%s wake up",threadname.c_str())
+                LOG(INFO, "%s wake up", threadname.c_str())
                 _wait_num--;
             }
-
             // 任务队列为空，并且不运行了
             if (_task_pool.empty() && !_isrunning)
             {
@@ -64,13 +63,13 @@ public:
                 break;
             }
             // 任务队列不为空
-            LOG(DEBUG,"%s gain task", threadname.c_str())
+            LOG(DEBUG, "%s gain task", threadname.c_str())
             T t = _task_pool.front();
             _task_pool.pop();
 
             Unlock();
             t();
-            //LOG(INFO, "task done,result is %s", t.Result().c_str())
+            // LOG(INFO, "task done,result is %s", t.Result().c_str())
             sleep(1);
             // 执行自己的任务
         }
@@ -86,7 +85,7 @@ public:
     {
         Lock();
         _task_pool.push(task);
-        if(_wait_num > 0)
+        if (_wait_num > 0)
         {
             Thread_wakeup();
         }
@@ -98,7 +97,7 @@ public:
         {
             std::string name = "thread - " + std::to_string(i + 1);
             _thread_pool.emplace_back(Thread(std::bind(&Threadpool::Handler_Task, this, std::placeholders::_1), name));
-            LOG(INFO, "%s init success..." , name.c_str())
+            LOG(INFO, "%s init success...", name.c_str())
         }
         _isrunning = true;
     }
@@ -106,7 +105,7 @@ public:
     {
         for (auto &e : _thread_pool)
         {
-            LOG(DEBUG,"%s is running..." , e.name().c_str())
+            LOG(DEBUG, "%s is running...", e.name().c_str())
             e.Start();
         }
     }
@@ -119,13 +118,28 @@ public:
             e.Join();
         }
     }
-
+    static Threadpool<T>* Getinstance()
+    {
+        if(instance == nullptr)
+        {
+            pthread_mutex_lock(&_lock);
+            instance = new Threadpool<T>();
+            instance->Init_Threadpool();
+            instance->Start();
+            pthread_mutex_unlock(&_lock);
+            LOG(INFO,"创建线程池单例成功")
+            return instance;
+        }
+        LOG(INFO,"获取线程池单例成功")
+        return instance;
+    }
     ~Threadpool()
     {
         pthread_mutex_destroy(&glock);
         pthread_cond_destroy(&gcond);
     }
-
+    Threadpool<T> &operator=(const Threadpool<T> &) = delete;
+    Threadpool(const Threadpool<T> &) = delete;
 private:
     std::vector<Thread> _thread_pool;
     std::queue<T> _task_pool; // 任务队列
@@ -137,4 +151,10 @@ private:
     int _wait_num;
 
     bool _isrunning; // 线程池是否在跑
+    static Threadpool<T>* instance;
+    static pthread_mutex_t _lock;
 };
+template <class T>
+Threadpool<T>* Threadpool<T>::instance = nullptr;
+template <class T>
+pthread_mutex_t Threadpool<T>::_lock = PTHREAD_MUTEX_INITIALIZER;

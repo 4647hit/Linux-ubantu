@@ -59,17 +59,17 @@ public:
             memset(buffer, 0, sizeof(buffer));
             struct sockaddr_in src;
             socklen_t len = (socklen_t)sizeof(src);
-            LOG(INFO, "begin rec")
             ssize_t rnum = recvfrom(_fd, buffer, sizeof(buffer), 0, (struct sockaddr *)&src, &len);
             if (rnum > 0)
             {
                 buffer[1023] = 0;
                 Inetaddr addr(&src);
                 // buffer
-                LOG(INFO, "receive informaiton success")
-                // printf("#[%s:%d]: %s\n", addr.IP().c_str(), addr.Port(), buffer);
+                //LOG(INFO, "receive informaiton success")
+                //printf("#[%s:%d]: %s\n", addr.IP().c_str(), addr.Port(), buffer);
                 // std::string response = _func(buffer);
-                _func(_fd,buffer,addr);
+                std::string str(buffer);
+                _func(_fd,str,addr);
                 // if(response.empty())
                 // {
                 //     response += " There is not this word";

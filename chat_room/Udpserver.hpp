@@ -62,7 +62,7 @@ public:
             ssize_t rnum = recvfrom(_fd, buffer, sizeof(buffer), 0, (struct sockaddr *)&src, &len);
             if (rnum > 0)
             {
-                buffer[1023] = 0;
+                buffer[rnum] = 0;
                 Inetaddr addr(&src);
                 // buffer
                 //LOG(INFO, "receive informaiton success")

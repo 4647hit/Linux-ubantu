@@ -44,7 +44,7 @@ public:
     }
     void Handler_Task(std::string threadname)
     {
-        LOG(FATAL, "There isnt error")
+        // LOG(FATAL, "There isnt error")
         while (true)
         {
             Lock();
@@ -118,19 +118,19 @@ public:
             e.Join();
         }
     }
-    static Threadpool<T>* Getinstance()
+    static Threadpool<T> *Getinstance()
     {
-        if(instance == nullptr)
+        if (instance == nullptr)
         {
             pthread_mutex_lock(&_lock);
             instance = new Threadpool<T>();
             instance->Init_Threadpool();
             instance->Start();
             pthread_mutex_unlock(&_lock);
-            LOG(INFO,"创建线程池单例成功")
+            LOG(INFO, "创建线程池单例成功")
             return instance;
         }
-        LOG(INFO,"获取线程池单例成功")
+        // LOG(INFO,"获取线程池单例成功")
         return instance;
     }
     ~Threadpool()
@@ -140,6 +140,7 @@ public:
     }
     Threadpool<T> &operator=(const Threadpool<T> &) = delete;
     Threadpool(const Threadpool<T> &) = delete;
+
 private:
     std::vector<Thread> _thread_pool;
     std::queue<T> _task_pool; // 任务队列
@@ -151,10 +152,10 @@ private:
     int _wait_num;
 
     bool _isrunning; // 线程池是否在跑
-    static Threadpool<T>* instance;
+    static Threadpool<T> *instance;
     static pthread_mutex_t _lock;
 };
 template <class T>
-Threadpool<T>* Threadpool<T>::instance = nullptr;
+Threadpool<T> *Threadpool<T>::instance = nullptr;
 template <class T>
 pthread_mutex_t Threadpool<T>::_lock = PTHREAD_MUTEX_INITIALIZER;

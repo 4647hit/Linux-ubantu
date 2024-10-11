@@ -56,9 +56,10 @@ void re(int fd, std::string name)
         //LOG(INFO, "recv message success")
         if (n > 0)
         {
+            // printf("hello\n");
             //std::cout << std::endl << "[" << name << "] | :" << buffer << std::endl;
-            fprintf(stderr,"[%s] |: %s\n", name.c_str(),buffer);
-	   fflush(stderr);
+            fprintf(stdout,"[%s] |: %s\n", name.c_str(),buffer);
+            fflush(stdout);
         }
         //pthread_mutex_unlock(&glock);
     }
@@ -72,20 +73,6 @@ int main(int argc, char *argv[])
     }
     struct sockaddr_in client;
     int fd = InitClient(client, argc, argv);
-    // // 创建套接字
-    // int fd = socket(AF_INET, SOCK_DGRAM, 0);
-    // if (fd < 0)
-    // {
-    //     LOG(FATAL, "socket fail...")
-    //     exit(-1);
-    // }
-    // struct sockaddr_in client;
-    // bzero(&client, sizeof(client));
-    // client.sin_family = AF_INET;
-    // client.sin_port = htons(stoi(argv[2]));
-    // client.sin_addr.s_addr = inet_addr(argv[1]);
-    // client 不需要显示地绑定服务端。OS会在client发送数据时，随机绑定一个端口号
-    // 通信
     func_t r = std::bind(&re, fd, std::placeholders::_1);
     func_t s = std::bind(&se, fd, &client, std::placeholders::_1);
     Thread send(s, "sender");

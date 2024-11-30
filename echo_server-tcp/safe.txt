@@ -1,0 +1,3 @@
+ls -a -l
+pwd
+tree

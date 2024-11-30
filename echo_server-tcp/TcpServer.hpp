@@ -63,52 +63,73 @@ public:
             LOG(FATAL, "listen failed")
         }
     }
-    bool CheckClose(int sockfd, struct sockaddr_in &peer)
-    {
-        char buffer[1024];
-        memset(buffer, 0, sizeof(buffer));
-        ssize_t count = read(sockfd, buffer, sizeof(buffer) - 1);
-        return count == 0;
-    }
     void Server(int sockfd, struct sockaddr_in &peer)
     {
         Inetaddr addr(peer);
-        std::string client_infor = "[" + addr.Ip() + " : " + std::to_string(addr.Port()) + "]";
+        std::string clientaddr = "[" + addr.Ip() + " : " + std::to_string(addr.Port()) + "]";
         while (true)
         {
-            if(CheckClose(sockfd,peer))
+            char inbuffer[1024];
+            ssize_t n = read(sockfd, inbuffer, sizeof(inbuffer) - 1);
+            if (n > 0)
             {
-                LOG(INFO,"client close")
-                ::close(sockfd);
-                return;
+                inbuffer[n] = 0;
+                std::cout << clientaddr << inbuffer << std::endl;
+
+                std::string echo_string = "[server echo]# ";
+                echo_string += inbuffer;
+
+                write(sockfd, echo_string.c_str(), echo_string.size());
             }
-            ssize_t count = 1024;
-            std::string result;
-            while (true)
+            else if (n == 0)
             {
-                char buffer[1024];
-                memset(buffer, 0, sizeof(buffer));
-                count = read(sockfd, buffer, sizeof(buffer) - 1);
-                if (count > 0)
-                {
-                    // std::cout << client_infor << buffer << std::endl;
-                    // fflush(stdout);
-                    result += buffer;
-                }
-                else if (count == 0)
-                {
-                    // LOG(INFO, "client close...")
-                    //::close(sockfd);
-                    break;
-                }
-                else
-                {
-                    LOG(ERROR, "read fail")
-                }
+                // client 退出&&关闭连接了
+                LOG(INFO, "%s quit\n", clientaddr.c_str());
+                break;
             }
-            std::string Re = fun_t(result);
-            write(sockfd, Re.c_str(), count);
+            else
+            {
+                LOG(ERROR, "read error\n", clientaddr.c_str());
+                break;
+            }
+            sleep(5);
+            break;
         }
+        // while (true)
+        // {
+        //     if(CheckClose(sockfd,peer))
+        //     {
+        //         LOG(INFO,"client close")
+        //         ::close(sockfd);
+        //         return;
+        //     }
+        //     ssize_t count = 1024;
+        //     std::string result;
+        //     while (true)
+        //     {
+        //         char buffer[1024];
+        //         memset(buffer, 0, sizeof(buffer));
+        //         count = read(sockfd, buffer, sizeof(buffer) - 1);
+        //         if (count > 0)
+        //         {
+        //             // std::cout << client_infor << buffer << std::endl;
+        //             // fflush(stdout);
+        //             result += buffer;
+        //         }
+        //         else if (count == 0)
+        //         {
+        //             // LOG(INFO, "client close...")
+        //             //::close(sockfd);
+        //             break;
+        //         }
+        //         else
+        //         {
+        //             LOG(ERROR, "read fail")
+        //         }
+        //     }
+        //     std::string Re = fun_t(result);
+        //     write(sockfd, Re.c_str(), count);
+        // }
     }
     static void *Hand_task(void *arg)
     {

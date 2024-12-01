@@ -3,8 +3,9 @@
 #include "abstract.hpp"
 #include "message.hpp"
 #include <iostream>
-int main()
-{
+#include "net.hpp"
+// int main()
+// {
     // RPC::RpcRequest::ptr rpt = RPC::MessageFactory::create<RPC::RpcRequest>();
     // rpt->setMethod("add");
     // Json::Value param;
@@ -133,36 +134,35 @@ int main()
     //     std::cout << (int)rpt2->rcode() << std::endl;
     //     return 0;
 
-    RPC::ServiceResponse::ptr rpt = RPC::MessageFactory::create<RPC::ServiceResponse>();
-    rpt->setRCode(RPC::RCode::RCODE_OK);
-    rpt->setServiceMethod("add");
-    rpt->setServicetype(ServiceOptype::SERVICE_DISCOVERY);
-    std::vector<Address> host;
-    host.push_back(Address("127.0.0.1",8888));
-    host.push_back(Address("127.0.0.2",8880));
-    rpt->setHost(host);
-    std::string str = rpt->serialize();
-    std::cout << str << std::endl;
-    RPC::BaseMessage::ptr bmp = RPC::MessageFactory::create(RPC::Mtype::RSP_SERVICE);
-    bool ret = bmp->unserialize(str);
-    if (ret == false)
-    {
-        return -1;
-    }
-    ret = bmp->check();
-    if (ret == false)
-    {
-        return -1;
-    }
-    RPC::ServiceResponse::ptr rpt2 = std::dynamic_pointer_cast<RPC::ServiceResponse>(bmp);
-    std::cout << (int)rpt2->rcode() << std::endl;
-    std::cout << (int)rpt2->optype() << std::endl;
-    std::cout << rpt2->method() << std::endl;
-    std::vector<Address> host1 = rpt2->Host();
-    for(int i = 0; i < 2 ; i++)
-    {
-        std::cout << host1[i].first << std::endl;
-        std::cout << host1[i].second << std::endl;
-    }
-    return 0;
-}
+    // RPC::ServiceResponse::ptr rpt = RPC::MessageFactory::create<RPC::ServiceResponse>();
+    // rpt->setRCode(RPC::RCode::RCODE_OK);
+    // rpt->setServiceMethod("add");
+    // rpt->setServicetype(ServiceOptype::SERVICE_DISCOVERY);
+    // std::vector<Address> host;
+    // host.push_back(Address("127.0.0.1",8888));
+    // host.push_back(Address("127.0.0.2",8880));
+    // rpt->setHost(host);
+    // std::string str = rpt->serialize();
+    // std::cout << str << std::endl;
+    // RPC::BaseMessage::ptr bmp = RPC::MessageFactory::create(RPC::Mtype::RSP_SERVICE);
+    // bool ret = bmp->unserialize(str);
+    // if (ret == false)
+    // {
+    //     return -1;
+    // }
+    // ret = bmp->check();
+    // if (ret == false)
+    // {
+    //     return -1;
+    // }
+    // RPC::ServiceResponse::ptr rpt2 = std::dynamic_pointer_cast<RPC::ServiceResponse>(bmp);
+    // std::cout << (int)rpt2->rcode() << std::endl;
+    // std::cout << (int)rpt2->optype() << std::endl;
+    // std::cout << rpt2->method() << std::endl;
+    // std::vector<Address> host1 = rpt2->Host();
+    // for(int i = 0; i < 2 ; i++)
+    // {
+    //     std::cout << host1[i].first << std::endl;
+    //     std::cout << host1[i].second << std::endl;
+    // }
+    // return 0;

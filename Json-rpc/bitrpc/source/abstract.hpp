@@ -40,6 +40,7 @@ namespace RPC
     };
     class BaseProtocol
     {
+    public:
         using ptr = std::shared_ptr<BaseProtocol>;
 
     public:
@@ -51,32 +52,31 @@ namespace RPC
     {
     public:
         using ptr = std::shared_ptr<BaseConnection>;
-
-    public:
         virtual void send(const BaseMessage::ptr &msg) = 0;
         virtual void shutdown() = 0;
-        virtual void connected() = 0;
+        virtual bool connected() = 0;
     };
     using ConnectionCallBack = std::function<void(const BaseConnection::ptr &)>;
     using CloseCallBack = std::function<void(const BaseConnection::ptr &)>;
-    using MessageCallBack = std::function<void(const BaseConnection::ptr &, BaseBuffer::ptr &)>;
+    using MessageCallBack = std::function<void(const BaseConnection::ptr &, BaseMessage::ptr &)>;
     class BaseServer
     {
+        public:
         using ptr = std::shared_ptr<BaseServer>;
-        virtual void setConnectionCallBack(ConnectionCallBack &cb)
+        virtual void setConnectionCallBack(const ConnectionCallBack &cb)
         {
             _cb_connection = cb;
         }
-        virtual void setCloseCallBack(CloseCallBack &cb)
+        virtual void setCloseCallBack(const CloseCallBack &cb)
         {
             _cb_close = cb;
         }
-        virtual void setMessageCallBack(MessageCallBack &cb)
+        virtual void setMessageCallBack(const MessageCallBack &cb)
         {
             _cb_message = cb;
         }
-
-    private:
+        virtual void start() = 0;
+    protected:
         ConnectionCallBack _cb_connection;
         CloseCallBack _cb_close;
         MessageCallBack _cb_message;
@@ -85,27 +85,26 @@ namespace RPC
     {
         public:
         using ptr = std::shared_ptr<BaseClient>;
-           virtual void setConnectionCallBack(ConnectionCallBack &cb)
+           virtual void setConnectionCallBack(const ConnectionCallBack &cb)
         {
             _cb_connection = cb;
         }
-        virtual void setCloseCallBack(CloseCallBack &cb)
+        virtual void setCloseCallBack(const CloseCallBack &cb)
         {
             _cb_close = cb;
         }
-        virtual void setMessageCallBack(MessageCallBack &cb)
+        virtual void setMessageCallBack(const MessageCallBack &cb)
         {
             _cb_message = cb;
         }
         virtual void connect() = 0;
         virtual void shutdown() = 0; 
-        virtual void send(const BaseMessage::ptr& val) = 0;
+        virtual bool send(const BaseMessage::ptr& val) = 0;
         virtual BaseConnection::ptr connection() = 0;
         virtual bool connected() = 0;
-    private:
+    protected:
         ConnectionCallBack _cb_connection;
         CloseCallBack _cb_close;
         MessageCallBack _cb_message;
     };
-
 }

@@ -74,5 +74,6 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "/root/linux/Linux-ubantu/Json-rpc/bitrpc/third/muduo-master/examples/idleconnection"
 }

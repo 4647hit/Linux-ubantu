@@ -17,7 +17,7 @@ namespace RPC
 #define DEBUG 1
 #define INFO 0
 #define ERROR 2
-#define DEFAULTLEVEL INFO
+#define DEFAULTLEVEL 0
     bool _is_save = false;
     pthread_mutex_t glock = PTHREAD_MUTEX_INITIALIZER;
     const char *path_name = "./Log.txt";
